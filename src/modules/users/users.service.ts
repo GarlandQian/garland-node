@@ -34,6 +34,7 @@ export class UsersService {
       })
       .skip((page - 1) * pageSize)
       .take(pageSize)
+      .printSql()
       .getManyAndCount();
 
     const [list, total] = await getList;

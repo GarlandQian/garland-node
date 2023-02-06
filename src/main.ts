@@ -1,37 +1,56 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
-import { HttpExceptionFilter } from './common/filters/http-execption.filters';
-import { TransformInterceptor } from './common/interceptor/transform.interceptor';
+import { env } from './common/config';
 import { ValidationPipe } from './common/pipe/validate.pipe';
+import * as chalk from 'chalk';
+
 declare const module: any;
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    bufferLogs: true,
-  });
+  const app = await NestFactory.create(AppModule);
 
-  app.useLogger(app.get(Logger));
+  // 设置全局请求访问前缀
+  app.setGlobalPrefix(env.SERVICE_CONFIG.apiPrefix);
 
   app.useGlobalPipes(new ValidationPipe());
 
-  app.useGlobalInterceptors(new TransformInterceptor());
-
-  app.useGlobalFilters(new HttpExceptionFilter());
-
   const options = new DocumentBuilder()
-    .setTitle('WD NestJS 博客API')
-    .setDescription('第一个NestJS例子')
-    .setVersion('1.0')
+    .setTitle(env.SWAGGER_CONFIG.title)
+    .setDescription(env.SWAGGER_CONFIG.desc)
+    .setVersion(env.SWAGGER_CONFIG.version)
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('api-docs', app, document);
+  SwaggerModule.setup(env.SWAGGER_CONFIG.setupUrl, app, document, {
+    customSiteTitle: env.SWAGGER_CONFIG.title,
+    swaggerOptions: {
+      docExpansion: 'list',
+      filter: true,
+      showRequestDuration: true,
+    },
+  });
 
-  await app.listen(3000);
+  await app.listen(env.SERVICE_CONFIG.port);
+
   if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => app.close());
   }
 }
-bootstrap();
+bootstrap().then(() => {
+  // 这个东西就是自己拼接的东东,启动成功后在终端输出点东东实现及效果图如下
+  const Host = `http://localhost`;
+  console.log(
+    chalk.red.bold('Swagger文档链接:'.padStart(16)),
+    chalk.green.underline(
+      `${Host}:${env.SERVICE_CONFIG.port}/${env.SWAGGER_CONFIG.setupUrl}`,
+    ),
+  );
+  console.log(
+    chalk.red.bold('Restful接口链接:'.padStart(16)),
+    chalk.green.underline(
+      `${Host}:${env.SERVICE_CONFIG.port}/${env.SERVICE_CONFIG.apiPrefix}`,
+    ),
+  );
+});

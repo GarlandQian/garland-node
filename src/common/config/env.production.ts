@@ -3,6 +3,8 @@ export default {
   SERVICE_CONFIG: {
     // 端口
     port: 3000,
+    // 请求前缀
+    apiPrefix: 'api',
   },
 
   // 数据库配置
@@ -14,6 +16,15 @@ export default {
     password: 'root',
     database: 'nodedb',
     autoLoadEntities: true,
-    synchronize: true,
+    synchronize: false,
+    logging: true,
+  },
+
+  //swagger配置
+  SWAGGER_CONFIG: {
+    setupUrl: 'api-docs',
+    title: 'WD NestJS 博客API',
+    desc: '第一个NestJS例子',
+    version: '1.0.0',
   },
 };
