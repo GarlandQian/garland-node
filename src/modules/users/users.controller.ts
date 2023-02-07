@@ -7,17 +7,21 @@ import {
   Delete,
   Query,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ListUserDto } from './dto/list-user.dto';
 import { Result } from 'src/common/common/dto/result.dto';
 import { ErrorCode } from '../../common/exception/error.code';
 import { AuthService } from '../auth/auth.service';
 import { UserLoginDto } from './dto/user-login.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { Public } from 'src/common/decorator/public.decorator';
 
+@ApiBearerAuth()
 @Controller('users')
 @ApiTags('用户管理')
 export class UsersController {
@@ -25,6 +29,36 @@ export class UsersController {
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
   ) {}
+
+  // JWT验证 - Step 1: 用户请求登录
+  @Public()
+  @Post('login')
+  @ApiBody({
+    description: '用户登录',
+    type: UserLoginDto,
+  })
+  @ApiOperation({ summary: '用户登录' })
+  async login(@Body() loginParmas: UserLoginDto) {
+    console.log('JWT验证 - Step 1: 用户请求登录');
+    const authResult = await this.authService.validateUser(
+      loginParmas.userName,
+      loginParmas.password,
+    );
+    switch (authResult.code) {
+      case 1:
+        return this.authService.certificate(authResult.user);
+      case 2:
+        return new Result().error(
+          new ErrorCode().ACCOUNT_PASSWORD_ERROR,
+          `账号或密码不正确`,
+        );
+      default:
+        return new Result().error(
+          new ErrorCode().ACCOUNT_NOT_EXIST,
+          `查无此人`,
+        );
+    }
+  }
 
   @Post()
   @ApiOperation({ summary: '新增用户信息' })
@@ -45,6 +79,8 @@ export class UsersController {
 
   @Get()
   @ApiOperation({ summary: '查询用户列表' })
+  @UseGuards(AuthGuard('jwt')) // 使用 'JWT' 进行验证
+  @ApiBearerAuth('JWT')
   async findAll(@Query() listUserDto: ListUserDto) {
     const userList = await this.usersService.findAll(listUserDto);
     return new Result<UpdateUserDto>().ok(userList);
@@ -88,30 +124,5 @@ export class UsersController {
     console.log(user);
     await this.usersService.update(user);
     return new Result().ok();
-  }
-
-  // JWT验证 - Step 1: 用户请求登录
-  @Post('login')
-  @ApiOperation({ summary: '用户登录' })
-  async login(@Body() loginParmas: UserLoginDto) {
-    console.log('JWT验证 - Step 1: 用户请求登录');
-    const authResult = await this.authService.validateUser(
-      loginParmas.userName,
-      loginParmas.password,
-    );
-    switch (authResult.code) {
-      case 1:
-        return this.authService.certificate(authResult.user);
-      case 2:
-        return {
-          code: 600,
-          msg: `账号或密码不正确`,
-        };
-      default:
-        return {
-          code: 600,
-          msg: `查无此人`,
-        };
-    }
   }
 }

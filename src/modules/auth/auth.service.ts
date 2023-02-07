@@ -2,7 +2,10 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as chalk from 'chalk';
+import { Result } from 'src/common/common/dto/result.dto';
+import { ErrorCode } from 'src/common/exception/error.code';
 import { encryptPassword } from 'src/common/utils/cryptogram.util';
+import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 
 @Injectable()
@@ -43,28 +46,21 @@ export class AuthService {
   }
 
   // JWT验证 - Step 3: 处理 jwt 签证
-  async certificate(user: any) {
+  async certificate(user: User) {
     const payload = {
-      username: user.username,
-      sub: user.userId,
+      username: user.userName,
+      id: user.id,
       realName: user.realName,
-      role: user.role,
     };
     console.log('JWT验证 - Step 3: 处理 jwt 签证');
     try {
       const token = this.jwtService.sign(payload);
-      return {
-        code: 200,
-        data: {
-          token,
-        },
-        msg: `登录成功`,
-      };
+      return new Result().ok({ token });
     } catch (error) {
-      return {
-        code: 600,
-        msg: `账号或密码错误`,
-      };
+      return new Result().error(
+        new ErrorCode().ACCOUNT_PASSWORD_ERROR,
+        `账号或密码不正确`,
+      );
     }
   }
 }

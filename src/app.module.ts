@@ -1,4 +1,4 @@
-import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ValidationPipe } from './common/pipe/validate.pipe';
@@ -19,6 +19,7 @@ import {
 import { AuthModule } from './modules/auth/auth.module';
 import loggerMiddleware from './common/logger/logger.middleware';
 import { UsersController } from './modules/users/users.controller';
+import { JwtAuthGuard } from './common/guards/auth.guard';
 
 console.log('-==-env-=-', env.DATABASE_CONFIG);
 @Module({
@@ -61,6 +62,10 @@ console.log('-==-env-=-', env.DATABASE_CONFIG);
     {
       provide: APP_INTERCEPTOR,
       useClass: UnifyResponseInterceptor,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
     },
   ],
 })

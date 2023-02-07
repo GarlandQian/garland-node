@@ -38,14 +38,15 @@ export class UsersService {
       .values({
         userName,
         realName,
-        password,
-        passwordSalt: hashPwd,
+        password: hashPwd,
+        passwordSalt: salt,
         gender,
         email,
         mobile,
         deptId,
         status,
-      });
+      })
+      .execute();
 
     await createSql;
   }
