@@ -16,6 +16,8 @@ import {
   NestModule,
   RequestMethod,
 } from '@nestjs/common';
+import { AuthService } from './modules/auth/auth.service';
+import { AuthModule } from './modules/auth/auth.module';
 import loggerMiddleware from './common/logger/logger.middleware';
 
 console.log('-==-env-=-', env.DATABASE_CONFIG);
@@ -42,6 +44,7 @@ console.log('-==-env-=-', env.DATABASE_CONFIG);
     }),
     TypeOrmModule.forRoot(env.DATABASE_CONFIG),
     UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [

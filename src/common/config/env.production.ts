@@ -2,7 +2,7 @@ export default {
   // 服务基本配置
   SERVICE_CONFIG: {
     // 端口
-    port: 3000,
+    port: 3001,
     // 请求前缀
     apiPrefix: 'api',
   },

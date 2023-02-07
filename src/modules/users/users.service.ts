@@ -7,6 +7,7 @@ import { ListUserDto } from './dto/list-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { sourceToTarget } from 'src/common/utils/convert.utils';
+import { encryptPassword, makeSalt } from 'src/common/utils/cryptogram.util';
 
 @Injectable()
 export class UsersService {
@@ -16,11 +17,37 @@ export class UsersService {
   ) {}
 
   // 新增
-  async create(createUserDto: CreateUserDto): Promise<void> {
-    // 由于
-    createUserDto.creator = 'admin';
-    createUserDto.updater = 'admin';
-    await this.usersRepository.save(createUserDto);
+  async create(createUserDto: CreateUserDto): Promise<any> {
+    const {
+      userName,
+      realName,
+      password,
+      gender,
+      email,
+      mobile,
+      deptId,
+      status = 0,
+    } = createUserDto;
+
+    const salt = makeSalt(); // 制作密码盐
+    const hashPwd = encryptPassword(password, salt); // 加密密码
+
+    const createSql = this.usersRepository
+      .createQueryBuilder()
+      .insert()
+      .values({
+        userName,
+        realName,
+        password,
+        passwordSalt: hashPwd,
+        gender,
+        email,
+        mobile,
+        deptId,
+        status,
+      });
+
+    await createSql;
   }
 
   // 查询分页
@@ -34,7 +61,6 @@ export class UsersService {
       })
       .skip((page - 1) * pageSize)
       .take(pageSize)
-      .printSql()
       .getManyAndCount();
 
     const [list, total] = await getList;
@@ -63,5 +89,19 @@ export class UsersService {
   async update(updateUserDto: UpdateUserDto): Promise<void> {
     const user = sourceToTarget(updateUserDto, new UpdateUserDto());
     await this.usersRepository.update(user.id, user);
+  }
+
+  async findOneByName(userName: string): Promise<User> {
+    const getOne = this.usersRepository
+      .createQueryBuilder('user')
+      .where({ userName })
+      .getOne();
+    try {
+      const user = await getOne;
+      return user;
+    } catch (error) {
+      console.error(error);
+      return void 0;
+    }
   }
 }

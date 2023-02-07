@@ -11,6 +11,9 @@ export class CreateUserDto extends BaseDTO {
   @ApiProperty({ description: '密码' })
   password: string;
 
+  @ApiProperty({ description: '再次输入密码' })
+  repassword: string;
+
   @ApiProperty({ description: '性别 0：男 1：女 2：保密' })
   gender: number;
 

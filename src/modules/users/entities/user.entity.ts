@@ -24,6 +24,9 @@ export class User extends Base {
   @Column({ name: 'dept_id' })
   deptId: string;
 
+  @Column({ name: 'password_salt' })
+  passwordSalt: string;
+
   @Column({ default: 0 })
   status: number;
 }

@@ -24,12 +24,15 @@ export class UsersController {
   @Post()
   @ApiOperation({ summary: '新增用户信息' })
   async create(@Body() createUserDto: CreateUserDto) {
-    const user = this.usersService.findByName(createUserDto.userName, '');
-    if (user) {
+    if (createUserDto.password !== createUserDto.repassword) {
       return new Result().error(
-        new ErrorCode().INTERNAL_SERVER_ERROR,
-        '用户名已存在',
+        new ErrorCode().ACCOUNT_PASSWORD_ERROR,
+        '两次密码输入不一致',
       );
+    }
+    const user = await this.usersService.findOneByName(createUserDto.userName);
+    if (user) {
+      return new Result().error(new ErrorCode().ACCOUNT_EXIST, '用户已存在');
     }
     await this.usersService.create(createUserDto);
     return new Result().ok();
