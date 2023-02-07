@@ -18,7 +18,7 @@ export class AuthService {
   // JWT验证 - Step 2: 校验用户信息
   async validateUser(username: string, password: string): Promise<any> {
     console.log(chalk.red('JWT验证 - Step 2: 校验用户信息'));
-    const user = await this.usersService.findOneByName(username);
+    const user = await this.usersService.findOneByName(username, 1);
     if (user) {
       const hashedPassword = user.password;
       const salt = user.passwordSalt;

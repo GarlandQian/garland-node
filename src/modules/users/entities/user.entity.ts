@@ -24,7 +24,7 @@ export class User extends Base {
   @Column({ name: 'dept_id' })
   deptId: string;
 
-  @Column({ name: 'password_salt' })
+  @Column({ name: 'password_salt', select: false })
   passwordSalt: string;
 
   @Column({ default: 0 })

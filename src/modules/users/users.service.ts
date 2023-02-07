@@ -92,11 +92,18 @@ export class UsersService {
     await this.usersRepository.update(user.id, user);
   }
 
-  async findOneByName(userName: string): Promise<User> {
-    const getOne = this.usersRepository
+  async findOneByName(userName: string, needSalt: 0 | 1 = 0): Promise<User> {
+    let getOne = this.usersRepository
       .createQueryBuilder('user')
       .where('user.userName = :userName', { userName })
       .getOne();
+    if (needSalt) {
+      getOne = this.usersRepository
+        .createQueryBuilder('user')
+        .addSelect('user.passwordSalt')
+        .where('user.userName = :userName', { userName })
+        .getOne();
+    }
     try {
       const user = await getOne;
       return user;

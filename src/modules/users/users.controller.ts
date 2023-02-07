@@ -20,6 +20,7 @@ import { AuthService } from '../auth/auth.service';
 import { UserLoginDto } from './dto/user-login.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { Public } from 'src/common/decorator/public.decorator';
+import * as chalk from 'chalk';
 
 @ApiBearerAuth()
 @Controller('users')
@@ -39,7 +40,7 @@ export class UsersController {
   })
   @ApiOperation({ summary: '用户登录' })
   async login(@Body() loginParmas: UserLoginDto) {
-    console.log('JWT验证 - Step 1: 用户请求登录');
+    console.log(chalk.red('JWT验证 - Step 1: 用户请求登录'));
     const authResult = await this.authService.validateUser(
       loginParmas.userName,
       loginParmas.password,
@@ -65,7 +66,7 @@ export class UsersController {
   async create(@Body() createUserDto: CreateUserDto) {
     if (createUserDto.password !== createUserDto.repassword) {
       return new Result().error(
-        new ErrorCode().ACCOUNT_PASSWORD_ERROR,
+        new ErrorCode().PASSWORD_ERROR,
         '两次密码输入不一致',
       );
     }
