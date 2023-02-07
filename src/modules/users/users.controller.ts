@@ -15,11 +15,16 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ListUserDto } from './dto/list-user.dto';
 import { Result } from 'src/common/common/dto/result.dto';
 import { ErrorCode } from '../../common/exception/error.code';
+import { AuthService } from '../auth/auth.service';
+import { UserLoginDto } from './dto/user-login.dto';
 
 @Controller('users')
 @ApiTags('用户管理')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: '新增用户信息' })
@@ -80,7 +85,33 @@ export class UsersController {
       );
     }
     user.delFlag = 1;
+    console.log(user);
     await this.usersService.update(user);
     return new Result().ok();
+  }
+
+  // JWT验证 - Step 1: 用户请求登录
+  @Post('login')
+  @ApiOperation({ summary: '用户登录' })
+  async login(@Body() loginParmas: UserLoginDto) {
+    console.log('JWT验证 - Step 1: 用户请求登录');
+    const authResult = await this.authService.validateUser(
+      loginParmas.userName,
+      loginParmas.password,
+    );
+    switch (authResult.code) {
+      case 1:
+        return this.authService.certificate(authResult.user);
+      case 2:
+        return {
+          code: 600,
+          msg: `账号或密码不正确`,
+        };
+      default:
+        return {
+          code: 600,
+          msg: `查无此人`,
+        };
+    }
   }
 }

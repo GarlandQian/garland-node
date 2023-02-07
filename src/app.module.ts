@@ -16,9 +16,9 @@ import {
   NestModule,
   RequestMethod,
 } from '@nestjs/common';
-import { AuthService } from './modules/auth/auth.service';
 import { AuthModule } from './modules/auth/auth.module';
 import loggerMiddleware from './common/logger/logger.middleware';
+import { UsersController } from './modules/users/users.controller';
 
 console.log('-==-env-=-', env.DATABASE_CONFIG);
 @Module({
@@ -46,7 +46,7 @@ console.log('-==-env-=-', env.DATABASE_CONFIG);
     UsersModule,
     AuthModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, UsersController],
   providers: [
     AppService,
     {

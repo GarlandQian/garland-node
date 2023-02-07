@@ -27,7 +27,7 @@ export default class UnifyExceptionFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    const response = exception.getResponse();
+    // const response = exception.getResponse();
     const msg =
       exception.message || (status >= 500 ? 'Service Error' : 'Client Error');
     // if (

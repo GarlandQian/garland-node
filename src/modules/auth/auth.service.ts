@@ -1,6 +1,7 @@
 // src/logical/auth/auth.service.ts
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import * as chalk from 'chalk';
 import { encryptPassword } from 'src/common/utils/cryptogram.util';
 import { UsersService } from '../users/users.service';
 
@@ -13,8 +14,8 @@ export class AuthService {
 
   // JWT验证 - Step 2: 校验用户信息
   async validateUser(username: string, password: string): Promise<any> {
-    console.log('JWT验证 - Step 2: 校验用户信息');
-    const user = await this.usersService.findOne(username);
+    console.log(chalk.red('JWT验证 - Step 2: 校验用户信息'));
+    const user = await this.usersService.findOneByName(username);
     if (user) {
       const hashedPassword = user.password;
       const salt = user.passwordSalt;

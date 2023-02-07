@@ -94,7 +94,7 @@ export class UsersService {
   async findOneByName(userName: string): Promise<User> {
     const getOne = this.usersRepository
       .createQueryBuilder('user')
-      .where({ userName })
+      .where('user.userName = :userName', { userName })
       .getOne();
     try {
       const user = await getOne;
