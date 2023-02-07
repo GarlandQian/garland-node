@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BaseDTO } from 'src/common/common/dto/base.dto';
+import { BaseDTO } from '../../../common/common/dto/base.dto';
 
 export class CreateUserDto extends BaseDTO {
   @ApiProperty({ description: '用户名', example: '用户' })

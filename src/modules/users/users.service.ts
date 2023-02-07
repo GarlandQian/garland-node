@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { getPagination } from 'src/common/utils/index.util';
 import { Not, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ListUserDto } from './dto/list-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { sourceToTarget } from 'src/common/utils/convert.utils';
-import { encryptPassword, makeSalt } from 'src/common/utils/cryptogram.util';
+import { sourceToTarget } from '../../common/utils/convert.utils';
+import { encryptPassword, makeSalt } from '../../common/utils/cryptogram.util';
+import { getPagination } from '../../common/utils/index.util';
 
 @Injectable()
 export class UsersService {

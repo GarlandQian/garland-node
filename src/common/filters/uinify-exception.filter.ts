@@ -26,17 +26,8 @@ export default class UnifyExceptionFilter implements ExceptionFilter {
       exception instanceof HttpException
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
-
-    // const response = exception.getResponse();
     const msg =
       exception.message || (status >= 500 ? 'Service Error' : 'Client Error');
-    // if (
-    //   Object.prototype.toString.call(response) === '[object Object]' &&
-    //   response.message
-    // ) {
-    //   msg = response.message;
-    // }
-    const { query, headers, url, method, body } = req;
 
     // 记录日志（错误消息，错误码，请求信息等）
     this.logger.error(msg, {

@@ -20,6 +20,9 @@ import { AuthModule } from './modules/auth/auth.module';
 import loggerMiddleware from './common/logger/logger.middleware';
 import { UsersController } from './modules/users/users.controller';
 import { JwtAuthGuard } from './common/guards/auth.guard';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { UploadModule } from './modules/upload/upload.module';
 
 console.log('-==-env-=-', env.DATABASE_CONFIG);
 @Module({
@@ -44,8 +47,13 @@ console.log('-==-env-=-', env.DATABASE_CONFIG);
       ],
     }),
     TypeOrmModule.forRoot(env.DATABASE_CONFIG),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public/upload'),
+      serveRoot: '/upload',
+    }),
     UsersModule,
     AuthModule,
+    UploadModule,
   ],
   controllers: [AppController, UsersController],
   providers: [

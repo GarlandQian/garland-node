@@ -14,12 +14,12 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ListUserDto } from './dto/list-user.dto';
-import { Result } from 'src/common/common/dto/result.dto';
+import { Result } from '../../common/common/dto/result.dto';
 import { ErrorCode } from '../../common/exception/error.code';
 import { AuthService } from '../auth/auth.service';
 import { UserLoginDto } from './dto/user-login.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { Public } from 'src/common/decorator/public.decorator';
+import { Public } from '../../common/decorator/public.decorator';
 import * as chalk from 'chalk';
 
 @ApiBearerAuth()

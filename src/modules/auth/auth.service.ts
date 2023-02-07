@@ -1,10 +1,9 @@
-// src/logical/auth/auth.service.ts
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as chalk from 'chalk';
-import { Result } from 'src/common/common/dto/result.dto';
-import { ErrorCode } from 'src/common/exception/error.code';
-import { encryptPassword } from 'src/common/utils/cryptogram.util';
+import { Result } from '../../common/common/dto/result.dto';
+import { ErrorCode } from '../../common/exception/error.code';
+import { encryptPassword } from '../../common/utils/cryptogram.util';
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 
