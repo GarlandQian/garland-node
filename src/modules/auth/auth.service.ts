@@ -50,6 +50,7 @@ export class AuthService {
       username: user.userName,
       id: user.id,
       realName: user.realName,
+      roleId: user.roleId,
     };
     console.log('JWT验证 - Step 3: 处理 jwt 签证');
     try {

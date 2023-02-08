@@ -1,6 +1,6 @@
 import { BadRequestException, Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
-import dayjs = require('dayjs');
+import * as dayjs from 'dayjs';
 import { diskStorage } from 'multer';
 import { UploadController } from './upload.controller';
 import { UploadService } from './upload.service';

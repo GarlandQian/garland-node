@@ -73,12 +73,12 @@ export class UsersService {
   }
 
   // 根据id查询信息
-  async findOne(id: string): Promise<User> {
+  async findOne(id: number): Promise<User> {
     return await this.usersRepository.findOne(id);
   }
 
   // 根据id或id和userName查询信息
-  async findByName(userName: string, id: string): Promise<User> {
+  async findByName(userName: string, id: number): Promise<User> {
     const condition = { userName: userName };
     if (id) {
       condition['id'] = Not(id);

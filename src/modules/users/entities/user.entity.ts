@@ -22,7 +22,10 @@ export class User extends Base {
   mobile: string;
 
   @Column({ name: 'dept_id' })
-  deptId: string;
+  deptId: number;
+
+  @Column({ name: 'role_id' })
+  roleId: number;
 
   @Column({ name: 'password_salt', select: false })
   passwordSalt: string;

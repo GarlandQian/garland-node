@@ -89,7 +89,7 @@ export class UsersController {
 
   @Get(':id')
   @ApiOperation({ summary: '查询用户信息' })
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: number) {
     const user = await this.usersService.findOne(id);
     return new Result<UpdateUserDto>().ok(user);
   }
@@ -99,7 +99,7 @@ export class UsersController {
   async update(@Body() updateUserDto: UpdateUserDto) {
     const user = this.usersService.findByName(
       updateUserDto.userName,
-      updateUserDto.id + '',
+      updateUserDto.id,
     );
     if (user) {
       return new Result().error(
@@ -113,7 +113,7 @@ export class UsersController {
 
   @Delete(':id')
   @ApiOperation({ summary: '删除用户信息' })
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id') id: number) {
     const user = await this.usersService.findOne(id);
     if (!user) {
       return new Result().error(
@@ -122,7 +122,6 @@ export class UsersController {
       );
     }
     user.delFlag = 1;
-    console.log(user);
     await this.usersService.update(user);
     return new Result().ok();
   }

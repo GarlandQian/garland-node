@@ -24,7 +24,10 @@ export class CreateUserDto extends BaseDTO {
   mobile: string;
 
   @ApiProperty({ description: '部门ID' })
-  deptId: string;
+  deptId: number;
+
+  @ApiProperty({ description: '角色ID' })
+  roleId: number;
 
   @ApiProperty({ description: '状态: 0启用 1禁用' })
   status: number;
