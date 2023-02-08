@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Files } from './entities/upload.entities';
-import { getfilesize } from 'src/common/utils/fileSize.utils';
+import { getfilesize } from '../../common/utils/fileSize.utils';
 import { nanoid } from 'nanoid';
 
 @Injectable()
@@ -24,7 +24,7 @@ export class UploadService {
         uid,
         saveName: filename,
         realName: originalname,
-        path: path.replace(/\\/g, '/'),
+        path: path.replace(/\\/g, '/').replace('public/', ''),
         size: `${getfilesize(size)}`,
       })
       .execute();

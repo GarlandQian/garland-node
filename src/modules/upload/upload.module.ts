@@ -7,7 +7,7 @@ import { UploadService } from './upload.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Files } from './entities/upload.entities';
 import { nanoid } from 'nanoid';
-import { checkDirAndCreate } from 'src/common/utils/dirop.utils';
+import { checkDirAndCreate } from '../../common/utils/dirop.utils';
 
 const image = ['gif', 'png', 'jpg', 'jpeg', 'bmp', 'webp'];
 const video = ['mp4', 'webm'];
@@ -19,7 +19,6 @@ const audio = ['mp3', 'wav', 'ogg'];
     MulterModule.register({
       storage: diskStorage({
         // 配置文件上传后的文件夹路径
-        // destination: `./public/upload/${dayjs().format('YYYY-MM-DD')}`,
         destination: (req, file, cb) => {
           // 根据上传的文件类型将图片视频音频和其他类型文件分别存到对应英文文件夹
           const mimeType = file.mimetype.split('/')[1];
@@ -33,7 +32,7 @@ const audio = ['mp3', 'wav', 'ogg'];
           audio.filter((item) => item === mimeType).length > 0
             ? (temp = 'audio')
             : '';
-          const filePath = `public/uploads/${temp}/${dayjs().format(
+          const filePath = `./public/upload/${temp}/${dayjs().format(
             'YYYY-MM-DD',
           )}`;
           checkDirAndCreate(filePath); // 判断文件夹是否存在，不存在则自动生成
