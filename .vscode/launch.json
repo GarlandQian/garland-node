@@ -7,7 +7,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Koa Program",
+      "name": "nodejs Program",
       "runtimeArgs": [
         "--nolazy",
         "-r",
