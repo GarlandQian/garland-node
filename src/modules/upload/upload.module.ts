@@ -4,9 +4,9 @@ import dayjs = require('dayjs');
 import { diskStorage } from 'multer';
 import { UploadController } from './upload.controller';
 import { UploadService } from './upload.service';
-import * as nuid from 'nuid';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Files } from './entities/upload.entities';
+import { nanoid } from 'nanoid';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { Files } from './entities/upload.entities';
         destination: `./public/upload/${dayjs().format('YYYY-MM-DD')}`,
         filename: (req, file, cb) => {
           // 在此处自定义保存后的文件名称
-          const filename = `${nuid.next()}.${file.mimetype.split('/')[1]}`;
+          const filename = `${nanoid()}.${file.mimetype.split('/')[1]}`;
           return cb(null, filename);
         },
       }),

@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Post,
   UploadedFile,
@@ -8,6 +9,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Result } from '../../common/common/dto/result.dto';
 import { Public } from '../../common/decorator/public.decorator';
+import { CreateFileManageDto } from './dto/upload-file.dto';
 import { UploadService } from './upload.service';
 
 @Controller('upload')
@@ -20,7 +22,7 @@ export class UploadController {
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
   @ApiOperation({ summary: '上传文件' })
-  async upload(@UploadedFile() file: Express.Multer.File) {
+  async upload(@UploadedFile() file: Express.Multer.File, @Body() body: CreateFileManageDto) {
     console.log(file); //上传图片的信息  必须在form的属性里面配置enctype="multipart/form-data"
     const uid = await this.uploadService.save(file);
     return new Result().ok({ uid });
