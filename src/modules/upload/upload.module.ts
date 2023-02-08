@@ -2,12 +2,12 @@ import { BadRequestException, Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
 import * as dayjs from 'dayjs';
 import { diskStorage } from 'multer';
-import { UploadController } from './upload.controller';
 import { UploadService } from './upload.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Files } from './entities/upload.entities';
 import { nanoid } from 'nanoid';
 import { checkDirAndCreate } from '../../common/utils/dirop.utils';
+import { UploadController } from './upload.controller';
 
 const image = ['gif', 'png', 'jpg', 'jpeg', 'bmp', 'webp'];
 const video = ['mp4', 'webm'];

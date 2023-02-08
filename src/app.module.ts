@@ -23,6 +23,10 @@ import { JwtAuthGuard } from './common/guards/auth.guard';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { UploadModule } from './modules/upload/upload.module';
+import { LoginModule } from './modules/login/login.module';
+import { LoginController } from './modules/login/login.controller';
+import { DownloadModule } from './modules/download/download.module';
+import { DownloadController } from './modules/download/download.controller';
 
 console.log('-==-env-=-', env.DATABASE_CONFIG);
 @Module({
@@ -54,8 +58,15 @@ console.log('-==-env-=-', env.DATABASE_CONFIG);
     UsersModule,
     AuthModule,
     UploadModule,
+    LoginModule,
+    DownloadModule,
   ],
-  controllers: [AppController, UsersController],
+  controllers: [
+    AppController,
+    LoginController,
+    DownloadController,
+    UsersController,
+  ],
   providers: [
     AppService,
     {

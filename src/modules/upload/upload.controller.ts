@@ -6,18 +6,22 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Public } from '../../common/decorator/public.decorator';
+import {
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Result } from '../../common/common/dto/result.dto';
 import { CreateFileManageDto } from './dto/upload-file.dto';
 import { UploadService } from './upload.service';
 
+@ApiBearerAuth()
 @Controller('upload')
-@ApiTags('上传')
+@ApiTags('上传/下载')
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
 
-  @Public()
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
