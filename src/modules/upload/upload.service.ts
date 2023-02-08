@@ -24,7 +24,7 @@ export class UploadService {
         uid,
         saveName: filename,
         realName: originalname,
-        path,
+        path: path.replace(/\\/g, '/'),
         size: `${getfilesize(size)}`,
       })
       .execute();
