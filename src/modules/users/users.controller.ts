@@ -16,7 +16,6 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ListUserDto } from './dto/list-user.dto';
 import { Result } from '../../common/common/dto/result.dto';
 import { ErrorCode } from '../../common/exception/error.code';
-import { AuthGuard } from '@nestjs/passport';
 
 @ApiBearerAuth()
 @Controller('users')
@@ -43,8 +42,6 @@ export class UsersController {
 
   @Get()
   @ApiOperation({ summary: '查询用户列表' })
-  @UseGuards(AuthGuard('jwt')) // 使用 'JWT' 进行验证
-  @ApiBearerAuth('JWT')
   async findAll(@Query() listUserDto: ListUserDto) {
     const userList = await this.usersService.findAll(listUserDto);
     return new Result<UpdateUserDto>().ok(userList);
@@ -60,7 +57,7 @@ export class UsersController {
   @Put(':id')
   @ApiOperation({ summary: '修改用户信息' })
   async update(@Body() updateUserDto: UpdateUserDto) {
-    const user = this.usersService.findByName(
+    const user = await this.usersService.findByName(
       updateUserDto.userName,
       updateUserDto.id,
     );

@@ -78,17 +78,31 @@ export class UsersService {
   }
 
   // 根据id或id和userName查询信息
-  async findByName(userName: string, id: number): Promise<User> {
-    const condition = { userName: userName };
-    if (id) {
-      condition['id'] = Not(id);
+  async findByName(
+    userName: string,
+    id: number,
+    needSalt: 0 | 1 = 0,
+  ): Promise<User> {
+    let getOne = this.usersRepository.createQueryBuilder('user');
+    if (needSalt) {
+      getOne = getOne.addSelect('user.passwordSalt');
     }
-    return await this.usersRepository.findOne(condition);
+    getOne = getOne.where('user.userName = :userName', { userName });
+    if (id) {
+      getOne = getOne.andWhere('user.id <> :id', { id });
+    }
+    const user = await getOne.getOne();
+    return user;
   }
 
   // 更新
   async update(updateUserDto: UpdateUserDto): Promise<void> {
-    const user = sourceToTarget(updateUserDto, new UpdateUserDto());
+    const user = JSON.parse(JSON.stringify(updateUserDto));
+    if (updateUserDto.password) {
+      const salt = makeSalt(); // 制作密码盐
+      const hashPwd = encryptPassword(updateUserDto.password, salt); // 加密密码
+      Object.assign(user, { password: hashPwd, passwordSalt: salt });
+    }
     await this.usersRepository.update(user.id, user);
   }
 
