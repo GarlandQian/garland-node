@@ -7,7 +7,6 @@ import {
   Delete,
   Query,
   Put,
-  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -16,12 +15,15 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ListUserDto } from './dto/list-user.dto';
 import { Result } from '../../common/common/dto/result.dto';
 import { ErrorCode } from '../../common/exception/error.code';
+import { JwtStrategy } from '../auth/jwt.strategy';
 
 @ApiBearerAuth()
 @Controller('users')
 @ApiTags('用户管理')
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+export class UsersController extends JwtStrategy {
+  constructor(private readonly usersService: UsersService) {
+    super();
+  }
 
   @Post()
   @ApiOperation({ summary: '新增用户信息' })

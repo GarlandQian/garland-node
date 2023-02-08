@@ -13,14 +13,17 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Result } from '../../common/common/dto/result.dto';
+import { JwtStrategy } from '../auth/jwt.strategy';
 import { CreateFileManageDto } from './dto/upload-file.dto';
 import { UploadService } from './upload.service';
 
 @ApiBearerAuth()
 @Controller('upload')
 @ApiTags('上传/下载')
-export class UploadController {
-  constructor(private readonly uploadService: UploadService) {}
+export class UploadController extends JwtStrategy {
+  constructor(private readonly uploadService: UploadService) {
+    super();
+  }
 
   @Post()
   @UseInterceptors(FileInterceptor('file'))

@@ -3,12 +3,15 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { DownloadService } from './download.service';
 import { Response } from 'express';
 import { getFileManageDto } from './dto/down-file.dto';
+import { JwtStrategy } from '../auth/jwt.strategy';
 
 @ApiBearerAuth()
 @Controller('download')
 @ApiTags('上传/下载')
-export class DownloadController {
-  constructor(private readonly downloadService: DownloadService) {}
+export class DownloadController extends JwtStrategy {
+  constructor(private readonly downloadService: DownloadService) {
+    super();
+  }
 
   @Post()
   @ApiOperation({ summary: '文件下载' })
