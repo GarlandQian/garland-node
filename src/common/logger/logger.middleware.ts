@@ -12,15 +12,6 @@ export default class LoggerMiddleware implements NestMiddleware {
   ) {}
 
   use(req: Request, res: Response, next: NextFunction) {
-    // 获取请求信息
-    const {
-      query,
-      headers: { host },
-      url,
-      method,
-      body,
-    } = req;
-
     // 记录日志
     this.logger.info('route', {
       req: getReqMainInfo(req),

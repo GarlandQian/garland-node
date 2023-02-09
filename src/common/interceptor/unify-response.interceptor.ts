@@ -25,8 +25,8 @@ export class UnifyResponseInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map((data) => {
         this.logger.info('response', {
-          responseData: data,
           req: getReqMainInfo(req),
+          responseData: data,
         });
         return {
           code: 0,

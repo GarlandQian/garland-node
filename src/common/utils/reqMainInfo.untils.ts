@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import { env } from '../config';
 
 export const getReqMainInfo: (req: Request) => {
   [prop: string]: any;

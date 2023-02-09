@@ -45,6 +45,17 @@ console.log('-==-env-=-', env.DATABASE_CONFIG);
             winston.format.timestamp({
               format: 'YYYY-MM-DD HH:mm:ss',
             }),
+            winston.format.prettyPrint(),
+            winston.format.json(),
+          ),
+        }),
+        new winston.transports.Console({
+          // 记录时添加时间戳信息
+          format: winston.format.combine(
+            winston.format.timestamp({
+              format: 'YYYY-MM-DD HH:mm:ss',
+            }),
+            winston.format.prettyPrint(),
             winston.format.json(),
           ),
         }),
